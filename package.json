@@ -7,6 +7,11 @@
     "type": "commonjs",
     "main": "index.js",
     "scripts": {
+        "dev": "set NODE_ENV=DEVELOPMENT && tsx watch src/index.ts",
+        "start": "node dist/index.js",
+        "build": "tsx src/index.ts",
+        "deploy": "tsx src/deployCommandsAll.ts",
+        "deploy_dev": "tsx src/deployCommandsDev.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "dependencies": {
@@ -17,7 +22,6 @@
         "ffmpeg-static": "^5.2.0"
     },
     "devDependencies": {
-        "tsup": "^8.5.0",
         "tsx": "^4.20.5",
         "typescript": "^5.9.2",
         "eslint": "^9.34.0"
