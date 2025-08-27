@@ -7,7 +7,7 @@
     "type": "commonjs",
     "main": "index.js",
     "scripts": {
-        "dev": "set NODE_ENV=DEVELOPMENT && tsx watch src/index.ts",
+        "dev": "NODE_ENV=development tsx watch src/index.ts",
         "start": "node dist/index.js",
         "build": "tsx src/index.ts",
         "deploy": "tsx src/deployCommandsAll.ts",

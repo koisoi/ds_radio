@@ -18,7 +18,7 @@ export const client = new Client({
 client.once("clientReady", async () => {
     logger.log("Client is ready.");
 
-    if (process.env.NODE_ENV === "DEVELOPMENT") {
+    if (process.env.NODE_ENV === "development") {
         logger.warning("Radio bot runs in development mode now.");
     }
 
@@ -49,7 +49,7 @@ client.once("clientReady", async () => {
             logger.error(`Failed to get dev guild roles: ${error.message}`)
         );
 
-    if (process.env.NODE_ENV !== "DEVELOPMENT") {
+    if (process.env.NODE_ENV !== "development") {
         logger.log("Fetching Cats' Ship guild info...");
         catsShipGuild?.members
             .fetch()
@@ -71,7 +71,7 @@ client.once("clientReady", async () => {
             );
     }
 
-    if (process.env.NODE_ENV === "DEVELOPMENT") {
+    if (process.env.NODE_ENV === "development") {
         logger.log("Connecting to Dev radio channel...");
 
         const connection = joinVoiceChannel({
