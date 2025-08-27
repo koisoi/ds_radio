@@ -8,6 +8,7 @@ const {
     DISCORD_DEV_GUILD_ID,
     DISCORD_CATS_SHIP_GUILD_ID,
     DEV_RADIO_CHANNEL_ID,
+    RADIO_CHANNEL_ID,
 } = process.env;
 
 if (
@@ -15,7 +16,8 @@ if (
     !DISCORD_CLIENT_ID ||
     !DISCORD_DEV_GUILD_ID ||
     !DISCORD_CATS_SHIP_GUILD_ID ||
-    !DEV_RADIO_CHANNEL_ID
+    !DEV_RADIO_CHANNEL_ID ||
+    !RADIO_CHANNEL_ID
 ) {
     throw new Error("Missing environment variables");
 }
@@ -26,4 +28,5 @@ export const config = {
     DISCORD_DEV_GUILD_ID,
     DISCORD_CATS_SHIP_GUILD_ID,
     DEV_RADIO_CHANNEL_ID,
+    RADIO_CHANNEL_ID,
 };
