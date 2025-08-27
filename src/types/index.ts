@@ -1,2 +1,2 @@
-export { Command, Commands } from "./command";
+export { Command, Commands, Execute } from "./command";
 export { Track } from "./player";

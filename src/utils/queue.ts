@@ -79,7 +79,7 @@ export class PlayerQueue extends Queue<Track> {
     /**
      * Returns array of tracks in queue
      */
-    public getQueue(): Track[] {
+    public getArray(): Track[] {
         if (this.head === null) return [];
 
         const queue = [];

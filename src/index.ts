@@ -3,6 +3,7 @@ import { commands } from "commands";
 import { config } from "config";
 import { Client, GatewayIntentBits, Interaction } from "discord.js";
 import { logger } from "utils";
+import { connectToRadioChannel } from "utils/connectionToRadio";
 
 export const client = new Client({
     intents: [
@@ -29,7 +30,7 @@ client.once("clientReady", async () => {
 
     // TODO: убрать коммент если добавлю на корабль
     if (devGuild === undefined /*|| catsShipGuild === undefined*/) {
-        throw new Error("Could not get a guild from cache...");
+        throw new Error("Could not get a guild from cache.");
     }
 
     logger.log("Fetching dev guild info...");
@@ -72,47 +73,11 @@ client.once("clientReady", async () => {
     }
 
     if (process.env.NODE_ENV === "development") {
-        logger.log("Connecting to Dev radio channel...");
-
-        const connection = joinVoiceChannel({
-            channelId: config.DEV_RADIO_CHANNEL_ID,
-            guildId: config.DISCORD_DEV_GUILD_ID,
-            adapterCreator: devGuild.voiceAdapterCreator,
-            selfDeaf: true,
-        });
-
-        connection.on(VoiceConnectionStatus.Ready, () => {
-            devGuild.members.cache
-                .get(config.DISCORD_CLIENT_ID)
-                ?.voice.setSuppressed(false);
-            logger.success("Connected to Dev guild radio channel!");
-        });
-
-        connection.on("error", (error: Error) => {
-            logger.error(
-                `Could not connect to Dev guild radio channel: ${error.message}`
-            );
-        });
+        connectToRadioChannel({ client, mode: "dev" });
     } // TODO: убрать коммент если добавлю на корабль
     /* else {
-        logger.log("Connecting to Cats' Ship radio channel...");
-
-        const connection = joinVoiceChannel({
-            channelId: config.RADIO_CHANNEL_ID,
-            guildId: config.DISCORD_CATS_SHIP_GUILD_ID,
-            adapterCreator: catsShipGuild.voiceAdapterCreator,
-            selfDeaf: true
-        })
-
-        connection.on(VoiceConnectionStatus.Ready, () => {
-            catsShipGuild.members.cache.get(config.DISCORD_CLIENT_ID)?.voice.setSuppressed(false);
-            logger.success("Connected to Cats' Ship radio channel!");
-        })
-
-        connection.on('error', (error: Error) => {
-            logger.error(`Could not connect to Cats' Ship radio channel: ${error.message}`);
-        })
-    }*/
+        connectToRadioChannel({client, mode: 'prod'})
+        */
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {

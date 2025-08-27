@@ -1,5 +1,6 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { globalStore } from "store";
+import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
 export const data = new SlashCommandBuilder()
@@ -11,9 +12,7 @@ export const data = new SlashCommandBuilder()
             .setDescription("true - включить, false - выключить")
     );
 
-export const execute = async (
-    interaction: ChatInputCommandInteraction<"cached">
-) => {
+export const execute: Execute = async (interaction) => {
     await interaction.deferReply();
 
     if (!isPermittedMember(interaction.member)) {

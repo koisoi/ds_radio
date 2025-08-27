@@ -1,16 +1,21 @@
-class GlobalStore {
-    #broadcastMode: boolean = false;
+import { PlayerQueue } from "utils";
 
-    constructor() {
-        this.#broadcastMode = false;
-    }
+class GlobalStore {
+    private _broadcastMode: boolean = false;
+    private _playerQueue: PlayerQueue = new PlayerQueue();
+
+    constructor() {}
 
     public get broadcastMode() {
-        return this.#broadcastMode;
+        return this._broadcastMode;
     }
 
     public set broadcastMode(mode: boolean) {
-        this.#broadcastMode = mode;
+        this._broadcastMode = mode;
+    }
+
+    public get playerQueue() {
+        return this._playerQueue;
     }
 }
 
