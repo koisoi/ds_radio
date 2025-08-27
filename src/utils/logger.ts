@@ -24,8 +24,10 @@ enum ConsoleColors {
 
 const timestamp = (): string => {
     const now = new Date();
+    const month = now.getMonth() + 1;
+
     return `${now.getDate()}.${
-        now.getMonth() + 1
+        month.toString().length === 2 ? month : `0${month}`
     }.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
 };
 
@@ -33,7 +35,7 @@ const paint = (
     message: string,
     color: ConsoleColors = ConsoleColors.Default
 ): string => {
-    return `\\x1b[${color}m ${message} \\x1b[${ConsoleColors.Default}m`;
+    return `\x1b[${color}m${message}\x1b[${ConsoleColors.Default}m`;
 };
 
 const createMesssage = (type: LogType, message: string): string => {
