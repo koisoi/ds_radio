@@ -11,10 +11,6 @@
         "strict": true,
         "strictNullChecks": true,
         "skipLibCheck": true,
-        "baseUrl": "./src",
-        "paths": {
-            "config/*": ["config/*"],
-            "lib/*": ["lib/*"]
-        }
+        "baseUrl": "./src"
     }
 }
