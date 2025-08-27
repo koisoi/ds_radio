@@ -116,7 +116,11 @@ client.once("clientReady", async () => {
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {
-    if (!interaction.isCommand()) {
+    if (
+        !interaction.isCommand() ||
+        !interaction.isChatInputCommand() ||
+        !interaction.inCachedGuild()
+    ) {
         return;
     }
 

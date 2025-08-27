@@ -1,15 +1,17 @@
 import {
-    CommandInteraction,
+    ChatInputCommandInteraction,
     InteractionResponse,
     Message,
     SlashCommandBuilder,
+    SlashCommandOptionsOnlyBuilder,
 } from "discord.js";
 
 export type Command = {
-    data: SlashCommandBuilder;
+    data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
     // TODO: подобрать тип получше, если это возможно
     execute: (
-        interaction: CommandInteraction
+        // TODO: посмотреть, нужны ли другие типы Interaction
+        interaction: ChatInputCommandInteraction<"cached">
     ) => Promise<InteractionResponse<boolean> | Message<boolean> | undefined>;
 };
 

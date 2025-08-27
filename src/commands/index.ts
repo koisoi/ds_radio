@@ -1,3 +1,4 @@
-import { Commands } from "models";
+import { Commands } from "types";
+import * as broadcast from "./broadcast";
 
-export const commands: Commands = {};
+export const commands: Commands = { broadcast };

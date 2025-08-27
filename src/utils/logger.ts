@@ -24,11 +24,18 @@ enum ConsoleColors {
 
 const timestamp = (): string => {
     const now = new Date();
-    const month = now.getMonth() + 1;
 
-    return `${now.getDate()}.${
-        month.toString().length === 2 ? month : `0${month}`
-    }.${now.getFullYear()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}`;
+    const twoDigit = (number: number): string => {
+        return number.toString().length >= 2
+            ? number.toString()
+            : `0${number.toString()}`;
+    };
+
+    return `${twoDigit(now.getDate())}.${twoDigit(
+        now.getMonth() + 1
+    )}.${now.getFullYear()} ${twoDigit(now.getHours())}:${twoDigit(
+        now.getMinutes()
+    )}:${twoDigit(now.getSeconds())}`;
 };
 
 const paint = (

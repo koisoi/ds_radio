@@ -9,6 +9,10 @@ const {
     DISCORD_CATS_SHIP_GUILD_ID,
     DEV_RADIO_CHANNEL_ID,
     RADIO_CHANNEL_ID,
+    CREATOR_ID,
+    ADMIN_ID,
+    PERMISSIVE_ROLE_ID,
+    DEV_PERMISSIVE_ROLE_ID,
 } = process.env;
 
 if (
@@ -17,7 +21,11 @@ if (
     !DISCORD_DEV_GUILD_ID ||
     !DISCORD_CATS_SHIP_GUILD_ID ||
     !DEV_RADIO_CHANNEL_ID ||
-    !RADIO_CHANNEL_ID
+    !RADIO_CHANNEL_ID ||
+    !CREATOR_ID ||
+    !ADMIN_ID ||
+    !PERMISSIVE_ROLE_ID ||
+    !DEV_PERMISSIVE_ROLE_ID
 ) {
     throw new Error("Missing environment variables");
 }
@@ -29,4 +37,8 @@ export const config = {
     DISCORD_CATS_SHIP_GUILD_ID,
     DEV_RADIO_CHANNEL_ID,
     RADIO_CHANNEL_ID,
+    CREATOR_ID,
+    ADMIN_ID,
+    PERMISSIVE_ROLE_ID,
+    DEV_PERMISSIVE_ROLE_ID,
 };
