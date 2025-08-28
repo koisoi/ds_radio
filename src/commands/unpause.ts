@@ -29,6 +29,7 @@ export const execute: Execute = async (interaction) => {
     queue
         .resume()
         .then(() => {
+            logger.log(`Player was unpaused by ${interaction.user.globalName}`);
             return interaction.editReply(
                 successIcon + "Воспроизведение продолжено!"
             );

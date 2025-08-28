@@ -27,8 +27,13 @@ export const execute: Execute = async (interaction) => {
         return interaction.editReply(nothingIsPlayingMessage);
     }
 
+    const skippedTrackName = queue.songs[0].name;
+
     (queue.songs.length === 1 ? queue.stop() : queue.skip())
         .then(() => {
+            logger.log(
+                `Track ${skippedTrackName} was skipped by ${interaction.user.globalName}`
+            );
             return interaction.editReply(successIcon + "Трек пропущен!");
         })
         .catch((error) => {

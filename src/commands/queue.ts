@@ -5,7 +5,7 @@ import { Execute } from "types";
 import { isPermittedMember } from "utils";
 
 export const data = new SlashCommandBuilder()
-    .setName("showqueue")
+    .setName("queue")
     .setDescription("Показать очередь воспроизведения");
 
 export const execute: Execute = async (interaction) => {

@@ -1,4 +1,5 @@
 import {
+    broadcastModeOnlyMessage,
     errorIcon,
     noAccessMessage,
     nothingIsPlayingMessage,
@@ -10,8 +11,8 @@ import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
 export const data = new SlashCommandBuilder()
-    .setName("pause")
-    .setDescription("Пауза");
+    .setName("clear")
+    .setDescription("Очистить очередь, кроме играющего трека");
 
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply({ flags: "Ephemeral" });
@@ -20,22 +21,25 @@ export const execute: Execute = async (interaction) => {
         return interaction.editReply(noAccessMessage);
     }
 
+    if (!globalStore.broadcastMode) {
+        return interaction.editReply(broadcastModeOnlyMessage);
+    }
+
     const queue = globalStore.distubeClient.getQueue(globalStore.guildID);
 
     if (!queue?.songs.length) {
         return interaction.editReply(nothingIsPlayingMessage);
     }
 
-    queue
-        .pause()
-        .then(() => {
-            logger.log(`Player was paused by ${interaction.user.globalName}`);
-            return interaction.editReply(
-                successIcon + "Воспроизведение остановлено!"
-            );
-        })
-        .catch((error) => {
-            logger.error(`Error pausing: ${error}`);
-            return interaction.editReply(errorIcon + "Ошибка при паузе...");
-        });
+    try {
+        queue.songs.splice(1);
+
+        logger.log(`Queue was cleared by ${interaction.user.globalName}`);
+        return interaction.editReply(successIcon + "Очередь очищена!");
+    } catch (error) {
+        logger.error(`Error clearing: ${error}`);
+        return interaction.editReply(
+            errorIcon + "Ошибка при очистке очереди..."
+        );
+    }
 };

@@ -1,16 +1,22 @@
 import { Commands } from "types";
 import * as broadcast from "./broadcast";
-import * as showqueue from "./showQueue";
+import * as queue from "./queue";
 import * as play from "./play";
 import * as skip from "./skip";
 import * as pause from "./pause";
 import * as unpause from "./unpause";
+import * as stop from "./stop";
+import * as clear from "./clear";
+import * as remove from "./remove";
 
 export const commands: Commands = {
     broadcast,
-    showqueue,
+    queue,
     play,
     skip,
     pause,
     unpause,
+    stop,
+    clear,
+    remove,
 };
