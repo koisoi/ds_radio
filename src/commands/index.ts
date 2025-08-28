@@ -8,6 +8,7 @@ import * as unpause from "./unpause";
 import * as stop from "./stop";
 import * as clear from "./clear";
 import * as remove from "./remove";
+import * as volume from "./volume";
 
 export const commands: Commands = {
     broadcast,
@@ -19,4 +20,5 @@ export const commands: Commands = {
     stop,
     clear,
     remove,
+    volume,
 };
