@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { globalStore } from "store";
+import { globalStore } from "index";
 import { Execute } from "types";
 
 export const data = new SlashCommandBuilder()

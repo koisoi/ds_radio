@@ -1,9 +1,8 @@
-import { joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 import { commands } from "commands";
 import { config } from "config";
 import { Client, GatewayIntentBits, Interaction } from "discord.js";
-import { logger } from "utils";
-import { connectToRadioChannel } from "utils/connectionToRadio";
+import { GlobalStore } from "store";
+import { connectToRadioChannel, logger } from "utils";
 
 export const client = new Client({
     intents: [
@@ -74,7 +73,8 @@ client.once("clientReady", async () => {
 
     if (process.env.NODE_ENV === "development") {
         connectToRadioChannel({ client, mode: "dev" });
-    } // TODO: убрать коммент если добавлю на корабль
+    }
+    // TODO: убрать коммент если добавлю на корабль
     /* else {
         connectToRadioChannel({client, mode: 'prod'})
         */
@@ -98,5 +98,8 @@ client.on("interactionCreate", async (interaction: Interaction) => {
 client.on("error", async (error: Error) => {
     logger.error(error.message);
 });
+
+// FIXME: да, экспортировать глобальный стор прямо из индекс-файла это как будто бы очень по-еблански, но, во-первых, это помогает удостовериться в том что стор будет инициализирован ПОСЛЕ создания клиента и ПЕРЕД логином, а во-вторых - я пиздец заебалась с попытками заставить бота хавать ссылки с ютуба и оно наконец-то блять работает с помощью этого ебланского способа. докумекаю башкой до решения получше - обязательно перепишу эту хуйню.
+export const globalStore = new GlobalStore(client);
 
 client.login(config.DISCORD_TOKEN);

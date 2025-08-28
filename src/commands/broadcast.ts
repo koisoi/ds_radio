@@ -1,5 +1,6 @@
+import { noAccessMessage } from "const";
 import { SlashCommandBuilder } from "discord.js";
-import { globalStore } from "store";
+import { globalStore } from "index";
 import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
@@ -9,16 +10,14 @@ export const data = new SlashCommandBuilder()
     .addBooleanOption((option) =>
         option
             .setName("mode")
-            .setDescription("true - включить, false - выключить")
+            .setDescription("True - включить, False - выключить")
     );
 
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply();
 
     if (!isPermittedMember(interaction.member)) {
-        return interaction.editReply(
-            "❌ Эта команда доступна только пользователям с ролью DJ!"
-        );
+        return interaction.editReply(noAccessMessage);
     }
 
     const mode = interaction.options.getBoolean("mode");
