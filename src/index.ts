@@ -2,9 +2,9 @@ import { YouTubePlugin } from "@distube/youtube";
 import { commands } from "commands";
 import { config } from "config";
 import { Client, GatewayIntentBits, Interaction } from "discord.js";
-import DisTube from "distube";
+import DisTube, { Events } from "distube";
 import { globalStore } from "store";
-import { connectToRadioChannel, logger } from "utils";
+import { logger } from "utils";
 
 export const client = new Client({
     intents: [
@@ -20,72 +20,70 @@ export const client = new Client({
 client.once("clientReady", async () => {
     logger.log("Client is ready.");
 
-    if (process.env.NODE_ENV === "development") {
-        logger.warning("Radio bot runs in development mode now.");
-    }
+    // DisTube initialization
 
-    // DisTube client initialization
     globalStore.distubeClient = new DisTube(client, {
         plugins: [new YouTubePlugin()],
         joinNewVoiceChannel: false,
     });
 
-    const devGuild = client.guilds.cache.get(config.DISCORD_DEV_GUILD_ID);
-    const catsShipGuild = client.guilds.cache.get(
-        config.DISCORD_CATS_SHIP_GUILD_ID
-    );
+    if (process.env.NODE_ENV === "development") {
+        logger.warning("Radio bot runs in development mode now.");
+    }
+    const guild = client.guilds.cache.get(globalStore.guildID);
 
-    // TODO: убрать коммент если добавлю на корабль
-    if (devGuild === undefined /*|| catsShipGuild === undefined*/) {
+    if (guild === undefined) {
         throw new Error("Could not get a guild from cache.");
     }
 
-    logger.log("Fetching dev guild info...");
-    // тип error?
+    logger.log("Fetching guild info...");
     // TODO: выбрать между ролью с доступом и юзерами с доступом и убрать ненужный фетч
-    devGuild?.members
+    guild.members
         .fetch()
-        .then(() => logger.success("Dev guild userlist fetched successfully!"))
-        .catch((error: Error) =>
-            logger.error(`Failed to get dev guild userlist: ${error.message}`)
+        .then(() => logger.success("Guild userlist fetched successfully!"))
+        .catch((error) =>
+            logger.error(`Failed to get guild userlist: ${error}`)
         );
 
-    devGuild?.roles
+    guild.roles
         .fetch()
-        .then(() => logger.success("Dev guild roles fetched successfully!"))
-        .catch((error: Error) =>
-            logger.error(`Failed to get dev guild roles: ${error.message}`)
+        .then(() => logger.success("Guild roles fetched successfully!"))
+        .catch((error) => logger.error(`Failed to get guild roles: ${error}`));
+
+    logger.log(`Connecting to radio channel...`);
+
+    const channel = guild.channels.cache.get(globalStore.radioChannelID);
+    if (!channel || !channel?.isVoiceBased()) {
+        logger.error(
+            "Could not get a radio channel from cache in connectToRadioChannel."
+        );
+        return;
+    }
+
+    globalStore.distubeClient.voices
+        .join(channel)
+        .then(() => {
+            guild.members.cache
+                .get(config.DISCORD_CLIENT_ID)
+                ?.voice.setSuppressed(false)
+                .catch((error: Error) => {
+                    logger.error(
+                        `Can't speak in the radio channel: ${error.message}`
+                    );
+                });
+            logger.success(`Connected to the radio channel!`);
+        })
+        .catch((error) =>
+            logger.error(`Error connecting to radio channel: ${error}`)
         );
 
-    if (process.env.NODE_ENV !== "development") {
-        logger.log("Fetching Cats' Ship guild info...");
-        catsShipGuild?.members
-            .fetch()
-            .then(() =>
-                logger.success("Cats' Ship userlist fetched successfully!")
-            )
-            .catch((error: Error) =>
-                logger.error(
-                    `Failed to get Cats' Ship userlist: ${error.message}`
-                )
-            );
-        catsShipGuild?.roles
-            .fetch()
-            .then(() =>
-                logger.success("Cats' Ship roles fetched successfully!")
-            )
-            .catch((error: Error) =>
-                logger.error(`Failed to get Cats' Ship roles: ${error.message}`)
-            );
-    }
+    globalStore.distubeClient.on(Events.ERROR, (error) => {
+        logger.error(`DisTube error: ${error}`);
+    });
 
-    if (process.env.NODE_ENV === "development") {
-        connectToRadioChannel({ client, mode: "dev" });
-    }
-    // TODO: убрать коммент если добавлю на корабль
-    /* else {
-        connectToRadioChannel({client, mode: 'prod'})
-        */
+    globalStore.distubeClient.on(Events.DISCONNECT, () => {
+        logger.error("Bot was disconnected.");
+    });
 });
 
 client.on("interactionCreate", async (interaction: Interaction) => {

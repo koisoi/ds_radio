@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from "discord.js";
-import { globalStore } from "index";
+import { globalStore } from "store";
 import { Execute } from "types";
 
 export const data = new SlashCommandBuilder()
@@ -9,16 +9,17 @@ export const data = new SlashCommandBuilder()
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply();
 
-    const queue = globalStore.playerQueue.getArray();
+    const queue =
+        globalStore.distubeClient.getQueue(interaction.guild)?.songs || [];
     let printedQueue = "";
     for (let i = 0; i < queue.length; i++) {
-        printedQueue += `${i + 1}. ${queue[i].title || "Без названия"}: ${
-            queue[i].ytLink
+        printedQueue += `${i + 1}. ${queue[i].name || "Без названия"}: ${
+            queue[i].url || "No link"
         }\n`;
     }
 
     return interaction.editReply(
-        `⏯️  **Очередь воспроизведения:**\n\n\`\`\`${
+        `⏯️  **Очередь воспроизведения:**\n\`\`\`${
             printedQueue.length ? printedQueue : "Очередь пуста!"
         }\`\`\``
     );

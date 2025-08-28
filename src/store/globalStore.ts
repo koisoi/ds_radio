@@ -1,9 +1,22 @@
+import { config } from "config";
 import DisTube from "distube";
 
 class GlobalStore {
     static #instance: GlobalStore;
     private _broadcastMode: boolean = false;
     private _distubeClient: DisTube | undefined;
+    private _guildID: string =
+        process.env.NODE_ENV === "development"
+            ? config.DISCORD_DEV_GUILD_ID
+            : config.DISCORD_CATS_SHIP_GUILD_ID;
+    private _radioChannelID: string =
+        process.env.NODE_ENV === "development"
+            ? config.DEV_RADIO_CHANNEL_ID
+            : config.RADIO_CHANNEL_ID;
+    private _permissiveRoleID: string =
+        process.env.NODE_ENV === "development"
+            ? config.DEV_PERMISSIVE_ROLE_ID
+            : config.PERMISSIVE_ROLE_ID;
 
     constructor() {
         if (GlobalStore.#instance) {
@@ -31,6 +44,18 @@ class GlobalStore {
 
     public set distubeClient(distube: DisTube) {
         this._distubeClient = distube;
+    }
+
+    public get guildID() {
+        return this._guildID;
+    }
+
+    public get radioChannelID() {
+        return this._radioChannelID;
+    }
+
+    public get permissiveRoleID() {
+        return this._permissiveRoleID;
     }
 }
 

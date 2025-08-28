@@ -41,11 +41,11 @@ const timestamp = (): string => {
 const paint = (
     message: string,
     color: ConsoleColors = ConsoleColors.Default
-): string => {
-    return `\x1b[${color}m${message}\x1b[${ConsoleColors.Default}m`;
+) => {
+    return [`\x1b[${color}m`, message, `\x1b[${ConsoleColors.Default}m`];
 };
 
-const createMesssage = (type: LogType, message: string): string => {
+const print = (type: LogType, ...messages: any[]) => {
     let labelColor: ConsoleColors = ConsoleColors.Default;
     let textColor: ConsoleColors = ConsoleColors.Default;
 
@@ -79,20 +79,19 @@ const createMesssage = (type: LogType, message: string): string => {
             break;
     }
 
-    return `${timestamp()} ${paint(`[${type}]`, labelColor)} ${paint(
-        message,
-        textColor
-    )}`;
+    messages.map((message) => {
+        console.log(
+            timestamp(),
+            ...paint(`[${type}]`, labelColor),
+            ...paint(message, textColor)
+        );
+    });
 };
 
 export const logger = {
-    log: (message: string) => console.log(createMesssage(LogType.Log, message)),
-    error: (message: string) =>
-        console.log(createMesssage(LogType.Error, message)),
-    warning: (message: string) =>
-        console.log(createMesssage(LogType.Warning, message)),
-    success: (message: string) =>
-        console.log(createMesssage(LogType.Success, message)),
-    debug: (message: string) =>
-        console.log(createMesssage(LogType.Debug, message)),
+    log: (...messages: any[]) => print(LogType.Log, ...messages),
+    error: (...messages: any[]) => print(LogType.Error, ...messages),
+    warning: (...messages: any[]) => print(LogType.Warning, ...messages),
+    success: (...messages: any[]) => print(LogType.Success, ...messages),
+    debug: (...messages: any[]) => print(LogType.Debug, ...messages),
 };
