@@ -1,9 +1,8 @@
-import { YouTubePlugin, YouTubeSong } from "@distube/youtube";
 import { config } from "config";
 import { noAccessMessage } from "const";
 import { SlashCommandBuilder } from "discord.js";
-import DisTube, { DisTubeStream, Events, Song } from "distube";
-import { client, globalStore } from "index";
+import { Events } from "distube";
+import { globalStore } from "store";
 import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
@@ -39,6 +38,8 @@ export const execute: Execute = async (interaction) => {
             channel,
             "https://www.youtube.com/watch?v=YTC75cKzuNk"
         );
+
+        // globalStore.distubeClient.
 
         globalStore.distubeClient.on(Events.ERROR, (error) => {
             logger.error(`Error with resource: ${error}`);

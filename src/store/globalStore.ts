@@ -1,17 +1,15 @@
-import { YouTubePlugin } from "@distube/youtube";
-import { Client } from "discord.js";
 import DisTube from "distube";
-import { PlayerQueue } from "utils";
 
-export class GlobalStore {
+class GlobalStore {
+    static #instance: GlobalStore;
     private _broadcastMode: boolean = false;
-    private _playerQueue: PlayerQueue = new PlayerQueue();
-    private _distubeClient: DisTube;
+    private _distubeClient: DisTube | undefined;
 
-    constructor(client: Client<boolean>) {
-        this._distubeClient = new DisTube(client, {
-            plugins: [new YouTubePlugin()],
-        });
+    constructor() {
+        if (GlobalStore.#instance) {
+            return GlobalStore.#instance;
+        }
+        GlobalStore.#instance = this;
     }
 
     public get broadcastMode() {
@@ -22,11 +20,18 @@ export class GlobalStore {
         this._broadcastMode = mode;
     }
 
-    public get playerQueue() {
-        return this._playerQueue;
-    }
-
     public get distubeClient() {
+        if (this._distubeClient === undefined) {
+            throw new Error(
+                "Tried to access DisTube client before initialization."
+            );
+        }
         return this._distubeClient;
     }
+
+    public set distubeClient(distube: DisTube) {
+        this._distubeClient = distube;
+    }
 }
+
+export const globalStore = new GlobalStore();

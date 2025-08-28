@@ -1,6 +1,6 @@
 import { noAccessMessage } from "const";
 import { SlashCommandBuilder } from "discord.js";
-import { globalStore } from "index";
+import { globalStore } from "store";
 import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 

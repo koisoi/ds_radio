@@ -1,10 +1,7 @@
 import { Client } from "discord.js";
 import { logger } from "./logger";
-import { joinVoiceChannel, VoiceConnectionStatus } from "@discordjs/voice";
 import { config } from "config";
-import DisTube from "distube";
-import { YouTubePlugin } from "@distube/youtube";
-import { globalStore } from "index";
+import { globalStore } from "store";
 
 type ConnectToRadioChannelProps = {
     client: Client<boolean>;

@@ -1,1 +1,1 @@
-export { GlobalStore } from "./globalStore";
+export { globalStore } from "./globalStore";
