@@ -1,2 +1,4 @@
+import { noAccessIcon } from "./emojis";
+
 export const broadcastModeOnlyMessage =
-    "❌  Эта команда доступна только в режиме эфира!";
+    noAccessIcon + "Эта команда доступна только в режиме эфира!";

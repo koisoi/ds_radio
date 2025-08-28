@@ -1,2 +1,4 @@
+import { noAccessIcon } from "./emojis";
+
 export const noAccessMessage =
-    "❌ Эта команда доступна только пользователям с ролью DJ!";
+    noAccessIcon + "Эта команда доступна только пользователям с ролью DJ!";

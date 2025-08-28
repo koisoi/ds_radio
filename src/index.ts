@@ -60,6 +60,8 @@ client.once("clientReady", async () => {
         return;
     }
 
+    // joining the voice channel
+
     globalStore.distubeClient.voices
         .join(channel)
         .then(() => {
@@ -76,6 +78,12 @@ client.once("clientReady", async () => {
         .catch((error) =>
             logger.error(`Error connecting to radio channel: ${error}`)
         );
+
+    // adding DisTube event handlers
+
+    globalStore.distubeClient.on(Events.PLAY_SONG, (_, song) => {
+        channel.send(`⏯️  Сейчас играет: ${song.name || "Без названия"}`);
+    });
 
     globalStore.distubeClient.on(Events.ERROR, (error) => {
         logger.error(`DisTube error: ${error}`);
