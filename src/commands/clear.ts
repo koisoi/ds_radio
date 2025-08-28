@@ -1,3 +1,4 @@
+import { YouTubePlugin } from "@distube/youtube";
 import {
     broadcastModeOnlyMessage,
     errorIcon,
@@ -6,6 +7,7 @@ import {
     successIcon,
 } from "const";
 import { SlashCommandBuilder } from "discord.js";
+import { Song } from "distube";
 import { globalStore } from "store";
 import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
