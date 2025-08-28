@@ -1,6 +1,5 @@
 import {
     errorIcon,
-    noAccessIcon,
     noAccessMessage,
     nothingIsPlayingMessage,
     successIcon,
@@ -11,8 +10,8 @@ import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
 export const data = new SlashCommandBuilder()
-    .setName("skip")
-    .setDescription("Пропустить играющий трек");
+    .setName("pause")
+    .setDescription("Пауза");
 
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply({ flags: "Ephemeral" });
@@ -27,14 +26,15 @@ export const execute: Execute = async (interaction) => {
         return interaction.editReply(nothingIsPlayingMessage);
     }
 
-    (queue.songs.length === 1 ? queue.stop() : queue.skip())
+    queue
+        .pause()
         .then(() => {
-            return interaction.editReply(successIcon + "Трек пропущен!");
+            return interaction.editReply(
+                successIcon + "Воспроизведение остановлено!"
+            );
         })
         .catch((error) => {
-            logger.error(`Error skipping track: ${error}`);
-            return interaction.editReply(
-                errorIcon + "Ошибка при пропуске трека..."
-            );
+            logger.error(`Error pausing: ${error}`);
+            return interaction.editReply(errorIcon + "Ошибка при паузе...");
         });
 };

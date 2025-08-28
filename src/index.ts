@@ -82,7 +82,7 @@ client.once("clientReady", async () => {
     // adding DisTube event handlers
 
     globalStore.distubeClient.on(Events.PLAY_SONG, (_, song) => {
-        channel.send(`⏯️  Сейчас играет: ${song.name || "Без названия"}`);
+        channel.send(`⏯️  Сейчас играет: **${song.name || "Без названия"}**`);
     });
 
     globalStore.distubeClient.on(Events.ERROR, (error) => {
