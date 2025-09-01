@@ -1,9 +1,11 @@
 import { config } from "config";
 import DisTube from "distube";
+import { Database } from "firebase/database";
 
 class GlobalStore {
     static #instance: GlobalStore;
     private _broadcastMode: boolean = false;
+    private _database: Database | undefined;
     private _distubeClient: DisTube | undefined;
     private _guildID: string =
         process.env.NODE_ENV === "development"
@@ -31,6 +33,19 @@ class GlobalStore {
 
     public set broadcastMode(mode: boolean) {
         this._broadcastMode = mode;
+    }
+
+    public get database() {
+        if (this._database === undefined) {
+            throw new Error(
+                "Tried to access Firebase database before initialization."
+            );
+        }
+        return this._database;
+    }
+
+    public set database(db: Database) {
+        this._database = db;
     }
 
     public get distubeClient() {

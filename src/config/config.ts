@@ -13,6 +13,9 @@ const {
     ADMIN_ID,
     PERMISSIVE_ROLE_ID,
     DEV_PERMISSIVE_ROLE_ID,
+    FIREBASE_API_KEY,
+    FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID,
 } = process.env;
 
 if (
@@ -25,7 +28,10 @@ if (
     !CREATOR_ID ||
     !ADMIN_ID ||
     !PERMISSIVE_ROLE_ID ||
-    !DEV_PERMISSIVE_ROLE_ID
+    !DEV_PERMISSIVE_ROLE_ID ||
+    !FIREBASE_API_KEY ||
+    !FIREBASE_MESSAGING_SENDER_ID ||
+    !FIREBASE_APP_ID
 ) {
     throw new Error("Missing environment variables");
 }
@@ -41,4 +47,7 @@ export const config = {
     ADMIN_ID,
     PERMISSIVE_ROLE_ID,
     DEV_PERMISSIVE_ROLE_ID,
+    FIREBASE_API_KEY,
+    FIREBASE_MESSAGING_SENDER_ID,
+    FIREBASE_APP_ID,
 };

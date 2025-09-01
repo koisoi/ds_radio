@@ -5,6 +5,8 @@ import { Client, GatewayIntentBits, Interaction } from "discord.js";
 import DisTube, { Events } from "distube";
 import { globalStore } from "store";
 import { logger } from "utils";
+import { initializeApp } from "firebase/app";
+import { getDatabase } from "firebase/database";
 
 export const client = new Client({
     intents: [
@@ -19,6 +21,19 @@ export const client = new Client({
 
 client.once("clientReady", async () => {
     logger.log("Client is ready.");
+
+    // Firebase initialization
+
+    const app = initializeApp({
+        apiKey: config.FIREBASE_API_KEY,
+        authDomain: "ds-radio.firebaseapp.com",
+        databaseURL: "https://ds-radio-default-rtdb.firebaseio.com",
+        projectId: "ds-radio",
+        storageBucket: "ds-radio.firebasestorage.app",
+        messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
+        appId: config.FIREBASE_APP_ID,
+    });
+    globalStore.database = getDatabase(app);
 
     // DisTube initialization
 
