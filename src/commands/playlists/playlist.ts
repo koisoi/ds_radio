@@ -18,6 +18,13 @@ export const data = new SlashCommandBuilder()
                         .setDescription("Название плейлиста")
                         .setRequired(true)
                 )
+                .addStringOption((option) =>
+                    option
+                        .setName("time")
+                        .setDescription(
+                            "Период времени, в который играет плейлист (формат чч:мм-чч:мм)"
+                        )
+                )
         //add time option
     );
 

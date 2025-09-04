@@ -9,3 +9,4 @@ export {
     isScheduledPlaylist,
     isPlaylist,
 } from "./player";
+export { stringToTimeRange } from "./time";
