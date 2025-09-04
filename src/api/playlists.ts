@@ -1,37 +1,73 @@
-import { getDatabase, push, ref, set } from "firebase/database";
+import {
+    DataSnapshot,
+    equalTo,
+    get,
+    orderByChild,
+    push,
+    query,
+    ref,
+    remove,
+    set,
+} from "firebase/database";
 import { globalStore } from "store";
-import { isScheduledPlaylist, Playlist, ScheduledPlaylist } from "types";
+import { Playlist } from "types";
 
-export const addPlaylist = (
-    playlist: Playlist | ScheduledPlaylist
-): Promise<void> => {
-    const nodePath = isScheduledPlaylist(playlist)
-        ? "scheduledPlaylists/"
-        : "playlists/";
+export const addPlaylist = (playlist: Playlist): Promise<void> => {
     const playlistsRef = ref(
         globalStore.database,
-        `${nodePath}${globalStore.guildID}`
+        `playlists/${globalStore.guildID}`
     );
     const newPlaylistRef = push(playlistsRef);
     return set(newPlaylistRef, playlist);
 };
 
-// export const getPlaylist = (playlistName: string): Promise<any> => {
-// //     const dbRef = ref(getDatabase());
-// // get(child(dbRef, `users/${userId}`)).then((snapshot) => {
-// //   if (snapshot.exists()) {
-// //     console.log(snapshot.val());
-// //   } else {
-// //     console.log("No data available");
-// //   }
-// // }).catch((error) => {
-// //   console.error(error);
-// // });
+export const getPlaylist = (playlistName: string): Promise<DataSnapshot> => {
+    const playlistsRef = ref(
+        globalStore.database,
+        `playlists/${globalStore.guildID}`
+    );
+    const searchedPlaylistQuery = query(
+        playlistsRef,
+        orderByChild("name"),
+        equalTo(playlistName)
+    );
+    return get(searchedPlaylistQuery);
+};
 
-// // const productsRef = ref(db, 'products');
+export const updatePlaylist = (
+    playlist: Playlist,
+    id: string
+): Promise<void> => {
+    const playlistRef = ref(
+        globalStore.database,
+        `playlists/${globalStore.guildID}/${id}`
+    );
+    return set(playlistRef, playlist);
+};
 
-// // const electronicsProductsQuery = query(productsRef, orderByChild('category'), equalTo('electronics'));
+export const deletePlaylist = (id: string): Promise<void> => {
+    const playlistRef = ref(
+        globalStore.database,
+        `playlists/${globalStore.guildID}/${id}`
+    );
+    return remove(playlistRef);
+};
 
-// const playlistsRef = ref(globalStore.database,`playlists/${globalStore.guildID}`);
-// const scheduledPlaylistsRef = ref(globalStore.database, )
-// }
+type GetPlaylistsOptions = {
+    scheduled: boolean;
+};
+
+export const getAllPlaylists = (
+    options?: GetPlaylistsOptions
+): Promise<DataSnapshot> => {
+    const playlistsRef = ref(
+        globalStore.database,
+        `playlists/${globalStore.guildID}`
+    );
+    const playlistsQuery = query(
+        playlistsRef,
+        orderByChild("scheduled"),
+        equalTo(options?.scheduled || false)
+    );
+    return get(options ? playlistsQuery : playlistsRef);
+};

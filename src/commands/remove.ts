@@ -9,7 +9,6 @@ import {
 import { SlashCommandBuilder } from "discord.js";
 import { globalStore } from "store";
 import { Execute } from "types";
-import { AutocompleteFunction } from "types/command";
 import { isPermittedMember, logger } from "utils";
 
 export const data = new SlashCommandBuilder()
