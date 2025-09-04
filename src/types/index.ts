@@ -3,5 +3,7 @@ export {
     SuggestedTrack,
     Playlist,
     ScheduledPlaylist,
-    isYoutubeLink,
+    isTrack,
+    isPlaylist,
+    isScheduledPlaylist,
 } from "./player";
