@@ -9,6 +9,7 @@ import {
 import { SlashCommandBuilder } from "discord.js";
 import { globalStore } from "store";
 import { Execute } from "types";
+import { AutocompleteFunction } from "types/command";
 import { isPermittedMember, logger } from "utils";
 
 export const data = new SlashCommandBuilder()
@@ -21,6 +22,27 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
             .setMinValue(1)
     );
+// .addStringOption((option) =>
+//     option
+//         .setName("trackname")
+//         .setDescription("Название трека")
+//         .setRequired(true)
+//         .setAutocomplete(true)
+// );
+
+// TODO: remove
+// export const autocomplete: AutocompleteFunction = async (interaction) => {
+// 	const focusedValue = interaction.options.getFocused();
+
+//     const queue = globalStore.distubeClient.getQueue(globalStore.guildID);
+//     if (!queue) return;
+
+// 	const choices = queue.songs.map((song) => song.name);
+// 	const filtered = choices.filter(choice => choice.startsWith(focusedValue));
+// 	await interaction.respond(
+// 		filtered.map(choice => ({ name: choice, value: choice })),
+// 	);
+// };
 
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply({ flags: "Ephemeral" });

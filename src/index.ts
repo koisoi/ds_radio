@@ -112,15 +112,24 @@ client.once("clientReady", async () => {
 client.on("interactionCreate", async (interaction: Interaction) => {
     if (
         !interaction.isCommand() ||
-        !interaction.isChatInputCommand() ||
+        // !interaction.isChatInputCommand() ||
         !interaction.inCachedGuild()
     ) {
         return;
     }
 
     const { commandName } = interaction;
+
     if (commands[commandName]) {
-        commands[commandName].execute(interaction);
+        if (interaction.isChatInputCommand()) {
+            commands[commandName].execute(interaction);
+        }
+        if (
+            interaction.isAutocomplete() &&
+            commands[commandName].autocomplete !== undefined
+        ) {
+            commands[commandName].autocomplete(interaction);
+        }
     }
 });
 
