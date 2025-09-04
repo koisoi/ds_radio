@@ -52,23 +52,47 @@ export const isNonScheduledPlaylist = (
     return isPlaylistBase(data) && data.scheduled === false;
 };
 
-type TimeRange = [Date, Date];
+type Enumerate<
+    N extends number,
+    Acc extends number[] = []
+> = Acc["length"] extends N
+    ? Acc[number]
+    : Enumerate<N, [...Acc, Acc["length"]]>;
 
-const isDate = (data: any): data is Date => {
-    return Object.prototype.toString.call(data) === "[object Date]";
+type Range<F extends number, T extends number> = Exclude<
+    Enumerate<T>,
+    Enumerate<F>
+>;
+
+export type Time = {
+    hours: Range<0, 24>;
+    minutes: Range<0, 60>;
 };
+
+export const isTime = (data: any): data is Time => {
+    return (
+        "hours" in data &&
+        typeof data.hours === "number" &&
+        data.hours >= 0 &&
+        data.hours <= 23 &&
+        "minutes" in data &&
+        typeof data.minutes === "number" &&
+        data.minutes >= 0 &&
+        data.minutes <= 59
+    );
+};
+
+type TimeRange = { from: Time; to: Time };
 
 const isTimeRange = (data: any): data is TimeRange => {
     return (
-        Array.isArray(data) &&
-        data.length === 2 &&
-        data.every((el) => isDate(el))
+        "from" in data && isTime(data.from) && "to" in data && isTime(data.to)
     );
 };
 
 export type ScheduledPlaylist = PlaylistBase & {
     scheduled: true;
-    timeRange: [Date, Date];
+    timeRange: TimeRange;
 };
 
 export const isScheduledPlaylist = (data: any): data is ScheduledPlaylist => {
