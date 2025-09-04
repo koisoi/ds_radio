@@ -1,56 +1,36 @@
-import {
-    DataSnapshot,
-    equalTo,
-    get,
-    orderByChild,
-    push,
-    query,
-    ref,
-    remove,
-    set,
-} from "firebase/database";
 import { globalStore } from "store";
 import { Playlist } from "types";
+import { DataSnapshot, getDatabase } from "firebase-admin/database";
 
 export const addPlaylist = (playlist: Playlist): Promise<void> => {
-    const playlistsRef = ref(
-        globalStore.database,
-        `playlists/${globalStore.guildID}`
-    );
-    const newPlaylistRef = push(playlistsRef);
-    return set(newPlaylistRef, playlist);
+    const playlistsRef = getDatabase().ref(`playlists/${globalStore.guildID}`);
+    const newPlaylistRef = playlistsRef.push();
+    return newPlaylistRef.set(playlist);
 };
 
 export const getPlaylist = (playlistName: string): Promise<DataSnapshot> => {
-    const playlistsRef = ref(
-        globalStore.database,
-        `playlists/${globalStore.guildID}`
-    );
-    const searchedPlaylistQuery = query(
-        playlistsRef,
-        orderByChild("name"),
-        equalTo(playlistName)
-    );
-    return get(searchedPlaylistQuery);
+    const playlistsRef = getDatabase().ref(`playlists/${globalStore.guildID}`);
+    const searchedPlaylistQuery = playlistsRef
+        .orderByChild("name")
+        .equalTo(playlistName);
+    return searchedPlaylistQuery.get();
 };
 
 export const updatePlaylist = (
     playlist: Playlist,
     id: string
 ): Promise<void> => {
-    const playlistRef = ref(
-        globalStore.database,
+    const playlistRef = getDatabase().ref(
         `playlists/${globalStore.guildID}/${id}`
     );
-    return set(playlistRef, playlist);
+    return playlistRef.set(playlist);
 };
 
 export const deletePlaylist = (id: string): Promise<void> => {
-    const playlistRef = ref(
-        globalStore.database,
+    const playlistRef = getDatabase().ref(
         `playlists/${globalStore.guildID}/${id}`
     );
-    return remove(playlistRef);
+    return playlistRef.remove();
 };
 
 type GetPlaylistsOptions = {
@@ -60,14 +40,9 @@ type GetPlaylistsOptions = {
 export const getAllPlaylists = (
     options?: GetPlaylistsOptions
 ): Promise<DataSnapshot> => {
-    const playlistsRef = ref(
-        globalStore.database,
-        `playlists/${globalStore.guildID}`
-    );
-    const playlistsQuery = query(
-        playlistsRef,
-        orderByChild("scheduled"),
-        equalTo(options?.scheduled || false)
-    );
-    return get(options ? playlistsQuery : playlistsRef);
+    const playlistsRef = getDatabase().ref(`playlists/${globalStore.guildID}`);
+    const playlistsQuery = playlistsRef
+        .orderByChild("scheduled")
+        .equalTo(options?.scheduled || false);
+    return (options ? playlistsQuery : playlistsRef).get();
 };

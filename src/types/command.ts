@@ -5,6 +5,7 @@ import {
     Message,
     SlashCommandBuilder,
     SlashCommandOptionsOnlyBuilder,
+    SlashCommandSubcommandsOnlyBuilder,
 } from "discord.js";
 
 export type Execute = (
@@ -17,7 +18,10 @@ export type AutocompleteFunction = (
 ) => void;
 
 export type Command = {
-    data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+    data:
+        | SlashCommandBuilder
+        | SlashCommandOptionsOnlyBuilder
+        | SlashCommandSubcommandsOnlyBuilder;
     // TODO: подобрать тип получше, если это возможно
     execute: Execute;
     autocomplete?: AutocompleteFunction;

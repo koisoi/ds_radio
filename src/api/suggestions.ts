@@ -1,28 +1,25 @@
-import { DataSnapshot, get, push, ref, remove, set } from "firebase/database";
+import { DataSnapshot, getDatabase } from "firebase-admin/database";
 import { globalStore } from "store";
 import { SuggestedTrack } from "types";
 
 export const addSuggestion = (suggestion: SuggestedTrack): Promise<void> => {
-    const suggestionsRef = ref(
-        globalStore.database,
+    const suggestionsRef = getDatabase().ref(
         `suggestions/${globalStore.guildID}`
     );
-    const newSuggestionRef = push(suggestionsRef);
-    return set(newSuggestionRef, suggestion);
+    const newSuggestionRef = suggestionsRef.push();
+    return newSuggestionRef.set(suggestion);
 };
 
 export const deleteSuggestion = (id: string): Promise<void> => {
-    const suggestionRef = ref(
-        globalStore.database,
+    const suggestionRef = getDatabase().ref(
         `suggestions/${globalStore.guildID}/${id}`
     );
-    return remove(suggestionRef);
+    return suggestionRef.remove();
 };
 
 export const getAllSuggestions = (): Promise<DataSnapshot> => {
-    const suggestionsRef = ref(
-        globalStore.database,
+    const suggestionsRef = getDatabase().ref(
         `suggestions/${globalStore.guildID}`
     );
-    return get(suggestionsRef);
+    return suggestionsRef.get();
 };

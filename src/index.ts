@@ -5,8 +5,8 @@ import { Client, GatewayIntentBits, Interaction } from "discord.js";
 import DisTube, { Events } from "distube";
 import { globalStore } from "store";
 import { logger } from "utils";
-import { initializeApp } from "firebase/app";
-import { getDatabase } from "firebase/database";
+import { cert } from "firebase-admin/app";
+import { initializeApp } from "firebase-admin/app";
 
 export const client = new Client({
     intents: [
@@ -24,16 +24,12 @@ client.once("clientReady", async () => {
 
     // Firebase initialization
 
-    const app = initializeApp({
-        apiKey: config.FIREBASE_API_KEY,
-        authDomain: "ds-radio.firebaseapp.com",
+    const serviceAccount = require("../ds-radio-firebase-adminsdk-fbsvc-c0ed2f23ed.json");
+
+    initializeApp({
+        credential: cert(serviceAccount),
         databaseURL: "https://ds-radio-default-rtdb.firebaseio.com",
-        projectId: "ds-radio",
-        storageBucket: "ds-radio.firebasestorage.app",
-        messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
-        appId: config.FIREBASE_APP_ID,
     });
-    globalStore.database = getDatabase(app);
 
     // DisTube initialization
 

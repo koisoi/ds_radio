@@ -9,6 +9,7 @@ import * as stop from "./player/stop";
 import * as clear from "./player/clear";
 import * as remove from "./player/remove";
 import * as volume from "./player/volume";
+import * as playlist from "./playlists/playlist";
 
 export const commands: Commands = {
     broadcast,
@@ -21,4 +22,5 @@ export const commands: Commands = {
     clear,
     remove,
     volume,
+    playlist,
 };

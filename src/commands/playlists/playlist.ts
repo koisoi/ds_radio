@@ -2,20 +2,23 @@ import { noAccessMessage } from "const";
 import { SlashCommandBuilder } from "discord.js";
 import { Execute } from "types";
 import { isPermittedMember } from "utils";
+import { add } from "./add";
 
 export const data = new SlashCommandBuilder()
     .setName("playlist")
     .setDescription("Действия с плейлистами")
-    .addSubcommand((subcommand) =>
-        subcommand
-            .setName("add")
-            .setDescription("Добавить новый плейлист")
-            .addStringOption((option) =>
-                option
-                    .setName("name")
-                    .setDescription("Название плейлиста")
-                    .setRequired(true)
-            )
+    .addSubcommand(
+        (subcommand) =>
+            subcommand
+                .setName("add")
+                .setDescription("Добавить новый плейлист")
+                .addStringOption((option) =>
+                    option
+                        .setName("name")
+                        .setDescription("Название плейлиста")
+                        .setRequired(true)
+                )
+        //add time option
     );
 
 export const execute: Execute = async (interaction) => {
@@ -29,7 +32,7 @@ export const execute: Execute = async (interaction) => {
 
     switch (subcommand) {
         case "add":
-            break;
+            return add(interaction);
 
         case "delete":
             break;
