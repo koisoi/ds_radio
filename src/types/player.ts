@@ -26,18 +26,30 @@ export type SuggestedTrack = Track & {
     playlistName: string;
 };
 
-export type Playlist = {
+type PlaylistBase = {
     name: string;
     tracks: Track[];
+    scheduled: boolean;
 };
 
-export const isPlaylist = (data: any): data is Playlist => {
+const isPlaylistBase = (data: any): data is PlaylistBase => {
     return (
         "name" in data &&
         typeof data.name === "string" &&
         "tracks" in data &&
-        isTrackArray(data.tracks)
+        isTrackArray(data.tracks) &&
+        "scheduled" in data
     );
+};
+
+export type NonScheduledPlaylist = PlaylistBase & {
+    scheduled: false;
+};
+
+export const isNonScheduledPlaylist = (
+    data: any
+): data is NonScheduledPlaylist => {
+    return isPlaylistBase(data) && data.scheduled === false;
 };
 
 type TimeRange = [Date, Date];
@@ -54,10 +66,22 @@ const isTimeRange = (data: any): data is TimeRange => {
     );
 };
 
-export type ScheduledPlaylist = Playlist & { timeRange: [Date, Date] };
+export type ScheduledPlaylist = PlaylistBase & {
+    scheduled: true;
+    timeRange: [Date, Date];
+};
 
 export const isScheduledPlaylist = (data: any): data is ScheduledPlaylist => {
     return (
-        isPlaylist(data) && "timeRange" in data && isTimeRange(data.timeRange)
+        isPlaylistBase(data) &&
+        data.scheduled === true &&
+        "timeRange" in data &&
+        isTimeRange(data.timeRange)
     );
+};
+
+export type Playlist = NonScheduledPlaylist | ScheduledPlaylist;
+
+export const isPlaylist = (data: any): data is Playlist => {
+    return isNonScheduledPlaylist(data) || isScheduledPlaylist(data);
 };

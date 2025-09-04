@@ -1,9 +1,11 @@
 export { Command, Commands, Execute } from "./command";
 export {
     SuggestedTrack,
-    Playlist,
+    NonScheduledPlaylist,
     ScheduledPlaylist,
+    Playlist,
     isTrack,
-    isPlaylist,
+    isNonScheduledPlaylist,
     isScheduledPlaylist,
+    isPlaylist,
 } from "./player";
