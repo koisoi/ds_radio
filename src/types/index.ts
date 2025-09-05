@@ -17,4 +17,4 @@ export {
     isSuggestedTrack,
     isSuggestedTrackArray,
 } from "./suggestions";
-export { stringToTimeRange, TimeRange } from "./time";
+export { stringToTimeRange, TimeRange, timeRangeToString } from "./time";

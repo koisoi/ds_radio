@@ -13,7 +13,7 @@ const isYoutubeLink = (data: any): data is YoutubeLink => {
     );
 };
 
-export type Track = { ytLink: YoutubeLink };
+export type Track = { name?: string; ytLink: YoutubeLink };
 
 export const isTrack = (data: any): data is Track => {
     return "ytLink" in data && isYoutubeLink(data.ytLink);

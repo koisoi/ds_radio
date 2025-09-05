@@ -69,3 +69,14 @@ export const stringToTimeRange = (str: string): TimeRange | null => {
         to: stringToTime(timestamps[1]),
     };
 };
+
+const timeToString = (time: Time): string => {
+    const hours = time.hours < 10 ? `0${time.hours}` : time.hours;
+    const minutes = time.minutes < 10 ? `0${time.minutes}` : time.minutes;
+
+    return `${hours}:${minutes}`;
+};
+
+export const timeRangeToString = (timeRange: TimeRange): string => {
+    return `${timeToString(timeRange.from)} - ${timeToString(timeRange.to)}`;
+};

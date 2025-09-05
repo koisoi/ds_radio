@@ -1,10 +1,18 @@
 import { noAccessMessage } from "const";
-import { SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import { AutocompleteFunction, Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 import { add } from "./add";
 import { globalStore } from "store";
 import { del } from "./delete";
+import { show } from "./show";
+
+const existingPlaylistNameOption = (option: SlashCommandStringOption) =>
+    option
+        .setName("name")
+        .setDescription("Название плейлиста")
+        .setRequired(true)
+        .setAutocomplete(true);
 
 export const data = new SlashCommandBuilder()
     .setName("playlist")
@@ -31,13 +39,13 @@ export const data = new SlashCommandBuilder()
         subcommand
             .setName("delete")
             .setDescription("Удалить плейлист")
-            .addStringOption((option) =>
-                option
-                    .setName("name")
-                    .setDescription("Название плейлиста")
-                    .setRequired(true)
-                    .setAutocomplete(true)
-            )
+            .addStringOption(existingPlaylistNameOption)
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("show")
+            .setDescription("Показать плейлист")
+            .addStringOption(existingPlaylistNameOption)
     );
 
 // only playlist names autocomplete needed for all subcommands
@@ -70,7 +78,7 @@ export const execute: Execute = async (interaction) => {
             return del(interaction);
 
         case "show":
-            break;
+            return show(interaction);
 
         case "showall":
             break;

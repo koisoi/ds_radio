@@ -12,6 +12,7 @@ import {
 } from "types";
 import { getDatabase, Reference } from "firebase-admin/database";
 import { noDataMessage, wrongFormatFromServerMessage } from "const";
+import { logger } from "utils";
 
 const getPlaylistRef = (name: string): Reference =>
     getDatabase().ref(`playlists/${globalStore.guildID}/${name}`);
@@ -43,10 +44,18 @@ export const getPlaylist = (playlistName: string): Promise<Playlist> => {
                 if (!snapshot.exists()) {
                     reject(noDataMessage);
                 }
-                if (!isPlaylist(snapshot)) {
+
+                const playlist = snapshot.val();
+                // thanks google for your bombastic optimization and straight up ignoring empty arrays
+                if (!playlist.tracks) {
+                    playlist.tracks = [];
+                }
+
+                if (!isPlaylist(playlist)) {
+                    logger.debug(playlist);
                     reject(wrongFormatFromServerMessage);
                 } else {
-                    resolve(snapshot);
+                    resolve(playlist);
                 }
             })
             .catch(reject);
