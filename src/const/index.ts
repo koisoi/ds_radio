@@ -3,9 +3,6 @@ export {
     noAccessMessage,
     nothingIsPlayingMessage,
     broadcastModeOnlyMessage,
+    uniqueNamesOnlyMessage,
 } from "./botMessages";
-export {
-    wrongFormatFromServerMessage,
-    noDataMessage,
-    uniqueNamesOnly,
-} from "./systemMessages";
+export { wrongFormatFromServerMessage, noDataMessage } from "./systemMessages";

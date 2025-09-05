@@ -39,6 +39,14 @@ const isTimeString = (data: any): data is TimeString => {
     );
 };
 
+const stringToTime = (str: TimeString): Time => {
+    const hoursMinutes = str.split(":");
+    return {
+        hours: Number(hoursMinutes[0]) as Range<0, 24>,
+        minutes: Number(hoursMinutes[1]) as Range<0, 60>,
+    };
+};
+
 export type TimeRange = { from: Time; to: Time };
 
 export const isTimeRange = (data: any): data is TimeRange => {
@@ -51,10 +59,13 @@ export const stringToTimeRange = (str: string): TimeRange | null => {
     const timestamps = str.split("-");
     if (
         timestamps.length !== 2 ||
-        !isTime(timestamps[0]) ||
-        !isTime(timestamps[1])
+        !isTimeString(timestamps[0]) ||
+        !isTimeString(timestamps[1])
     ) {
         return null;
     }
-    return { from: timestamps[0], to: timestamps[1] };
+    return {
+        from: stringToTime(timestamps[0]),
+        to: stringToTime(timestamps[1]),
+    };
 };

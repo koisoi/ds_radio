@@ -8,3 +8,6 @@ export const noAccessMessage =
 
 export const nothingIsPlayingMessage =
     noAccessIcon + "Сейчас ничего не играет!";
+
+export const uniqueNamesOnlyMessage =
+    noAccessIcon + "Плейлист с таким названием уже существует!";

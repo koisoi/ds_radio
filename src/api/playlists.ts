@@ -11,11 +11,7 @@ import {
     isNonScheduledPlaylistArray,
 } from "types";
 import { getDatabase, Reference } from "firebase-admin/database";
-import {
-    noDataMessage,
-    uniqueNamesOnly,
-    wrongFormatFromServerMessage,
-} from "const";
+import { noDataMessage, wrongFormatFromServerMessage } from "const";
 
 const getPlaylistRef = (name: string): Reference =>
     getDatabase().ref(`playlists/${globalStore.guildID}/${name}`);

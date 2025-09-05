@@ -7,25 +7,23 @@ import { add } from "./add";
 export const data = new SlashCommandBuilder()
     .setName("playlist")
     .setDescription("Действия с плейлистами")
-    .addSubcommand(
-        (subcommand) =>
-            subcommand
-                .setName("add")
-                .setDescription("Добавить новый плейлист")
-                .addStringOption((option) =>
-                    option
-                        .setName("name")
-                        .setDescription("Название плейлиста")
-                        .setRequired(true)
-                )
-                .addStringOption((option) =>
-                    option
-                        .setName("time")
-                        .setDescription(
-                            "Период времени, в который играет плейлист (формат чч:мм-чч:мм)"
-                        )
-                )
-        //add time option
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("add")
+            .setDescription("Добавить новый плейлист")
+            .addStringOption((option) =>
+                option
+                    .setName("name")
+                    .setDescription("Название плейлиста")
+                    .setRequired(true)
+            )
+            .addStringOption((option) =>
+                option
+                    .setName("time")
+                    .setDescription(
+                        "Период времени, в который играет плейлист (формат чч:мм-чч:мм)"
+                    )
+            )
     );
 
 export const execute: Execute = async (interaction) => {
