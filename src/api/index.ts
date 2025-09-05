@@ -3,7 +3,10 @@ export {
     getPlaylist,
     deletePlaylist,
     getAllPlaylists,
-    updatePlaylist,
+    changePlaylistName,
+    schedulePlaylist,
+    unschedulePlaylist,
+    subscribeToTakenNames,
 } from "./playlists";
 export {
     addSuggestion,

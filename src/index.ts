@@ -7,6 +7,7 @@ import { globalStore } from "store";
 import { logger } from "utils";
 import { cert } from "firebase-admin/app";
 import { initializeApp } from "firebase-admin/app";
+import { subscribeToTakenNames } from "api";
 
 export const client = new Client({
     intents: [
@@ -30,6 +31,8 @@ client.once("clientReady", async () => {
         credential: cert(serviceAccount),
         databaseURL: "https://ds-radio-default-rtdb.firebaseio.com",
     });
+
+    subscribeToTakenNames();
 
     // DisTube initialization
 

@@ -1,4 +1,11 @@
-export { noAccessMessage } from "./noAccessMessage";
-export { broadcastModeOnlyMessage } from "./broadcastModeOnlyMessage";
 export { successIcon, noAccessIcon, errorIcon } from "./icons";
-export { nothingIsPlayingMessage } from "./nothingIsPlayingMessage";
+export {
+    noAccessMessage,
+    nothingIsPlayingMessage,
+    broadcastModeOnlyMessage,
+} from "./botMessages";
+export {
+    wrongFormatFromServerMessage,
+    noDataMessage,
+    uniqueNamesOnly,
+} from "./systemMessages";

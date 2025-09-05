@@ -4,7 +4,6 @@ import DisTube from "distube";
 class GlobalStore {
     static #instance: GlobalStore;
     private _broadcastMode: boolean = false;
-    // private _database: database.Database | undefined;
     private _distubeClient: DisTube | undefined;
     private _guildID: string =
         process.env.NODE_ENV === "development"
@@ -18,6 +17,7 @@ class GlobalStore {
         process.env.NODE_ENV === "development"
             ? config.DEV_PERMISSIVE_ROLE_ID
             : config.PERMISSIVE_ROLE_ID;
+    private _takenNames: string[] = [];
 
     constructor() {
         if (GlobalStore.#instance) {
@@ -33,19 +33,6 @@ class GlobalStore {
     public set broadcastMode(mode: boolean) {
         this._broadcastMode = mode;
     }
-
-    // public get database() {
-    //     if (this._database === undefined) {
-    //         throw new Error(
-    //             "Tried to access Firebase database before initialization."
-    //         );
-    //     }
-    //     return this._database;
-    // }
-
-    // public set database(db: Database) {
-    //     this._database = db;
-    // }
 
     public get distubeClient() {
         if (this._distubeClient === undefined) {
@@ -70,6 +57,14 @@ class GlobalStore {
 
     public get permissiveRoleID() {
         return this._permissiveRoleID;
+    }
+
+    public get takenNames() {
+        return this._takenNames;
+    }
+
+    public set takenNames(names: string[]) {
+        this._takenNames = names;
     }
 }
 

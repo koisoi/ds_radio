@@ -13,7 +13,7 @@ const isYoutubeLink = (data: any): data is YoutubeLink => {
     );
 };
 
-type Track = { ytLink: YoutubeLink };
+export type Track = { ytLink: YoutubeLink };
 
 export const isTrack = (data: any): data is Track => {
     return "ytLink" in data && isYoutubeLink(data.ytLink);
@@ -21,11 +21,6 @@ export const isTrack = (data: any): data is Track => {
 
 const isTrackArray = (data: any): data is Track[] => {
     return Array.isArray(data) && data.every((el) => isTrack(el));
-};
-
-export type SuggestedTrack = Track & {
-    authorID: string;
-    playlistName: string;
 };
 
 type PlaylistBase = {
@@ -54,6 +49,15 @@ export const isNonScheduledPlaylist = (
     return isPlaylistBase(data) && data.scheduled === false;
 };
 
+export const isNonScheduledPlaylistArray = (
+    data: any
+): data is NonScheduledPlaylist[] => {
+    return (
+        Array.isArray(data) &&
+        data.every((element) => isNonScheduledPlaylist(element))
+    );
+};
+
 export type ScheduledPlaylist = PlaylistBase & {
     scheduled: true;
     timeRange: TimeRange;
@@ -68,8 +72,21 @@ export const isScheduledPlaylist = (data: any): data is ScheduledPlaylist => {
     );
 };
 
+export const isScheduledPlaylistArray = (
+    data: any
+): data is ScheduledPlaylist[] => {
+    return (
+        Array.isArray(data) &&
+        data.every((element) => isScheduledPlaylist(element))
+    );
+};
+
 export type Playlist = NonScheduledPlaylist | ScheduledPlaylist;
 
 export const isPlaylist = (data: any): data is Playlist => {
     return isNonScheduledPlaylist(data) || isScheduledPlaylist(data);
+};
+
+export const isPlaylistArray = (data: any): data is Playlist[] => {
+    return Array.isArray(data) && data.every((element) => isPlaylist(element));
 };

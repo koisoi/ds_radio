@@ -1,12 +1,20 @@
 export { Command, Commands, Execute } from "./command";
 export {
-    SuggestedTrack,
     NonScheduledPlaylist,
     ScheduledPlaylist,
     Playlist,
+    Track,
     isTrack,
     isNonScheduledPlaylist,
     isScheduledPlaylist,
     isPlaylist,
+    isPlaylistArray,
+    isNonScheduledPlaylistArray,
+    isScheduledPlaylistArray,
 } from "./player";
-export { stringToTimeRange } from "./time";
+export {
+    SuggestedTrack,
+    isSuggestedTrack,
+    isSuggestedTrackArray,
+} from "./suggestions";
+export { stringToTimeRange, TimeRange } from "./time";

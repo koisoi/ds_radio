@@ -1,25 +1,63 @@
-import { DataSnapshot, getDatabase } from "firebase-admin/database";
+import { noDataMessage, wrongFormatFromServerMessage } from "const";
+import { getDatabase } from "firebase-admin/database";
 import { globalStore } from "store";
-import { SuggestedTrack } from "types";
+import { isSuggestedTrackArray, SuggestedTrack } from "types";
 
 export const addSuggestion = (suggestion: SuggestedTrack): Promise<void> => {
-    const suggestionsRef = getDatabase().ref(
-        `suggestions/${globalStore.guildID}`
-    );
-    const newSuggestionRef = suggestionsRef.push();
-    return newSuggestionRef.set(suggestion);
+    return new Promise((resolve, reject) => {
+        const suggestionsRef = getDatabase().ref(
+            `suggestions/${globalStore.guildID}`
+        );
+        const newSuggestionRef = suggestionsRef.push();
+        newSuggestionRef.set(suggestion).then(resolve).catch(reject);
+    });
 };
 
-export const deleteSuggestion = (id: string): Promise<void> => {
-    const suggestionRef = getDatabase().ref(
-        `suggestions/${globalStore.guildID}/${id}`
-    );
-    return suggestionRef.remove();
+export const deleteSuggestion = (index: number): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        const suggestionsRef = getDatabase().ref(
+            `suggestions/${globalStore.guildID}`
+        );
+        suggestionsRef
+            .get()
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    reject(noDataMessage);
+                }
+
+                const suggestions = Object.keys(snapshot);
+                if (suggestions[index] === undefined) {
+                    reject(noDataMessage);
+                } else {
+                    const searchedSuggestionRef = suggestionsRef.child(
+                        suggestions[index]
+                    );
+                    searchedSuggestionRef.remove().then(resolve).catch(reject);
+                }
+            })
+            .catch(reject);
+    });
 };
 
-export const getAllSuggestions = (): Promise<DataSnapshot> => {
-    const suggestionsRef = getDatabase().ref(
-        `suggestions/${globalStore.guildID}`
-    );
-    return suggestionsRef.get();
+export const getAllSuggestions = (): Promise<SuggestedTrack[]> => {
+    return new Promise((resolve, reject) => {
+        const suggestionsRef = getDatabase().ref(
+            `suggestions/${globalStore.guildID}`
+        );
+        suggestionsRef
+            .get()
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    resolve([]);
+                }
+
+                const suggestions = Object.values(snapshot);
+                if (!isSuggestedTrackArray(suggestions)) {
+                    reject(wrongFormatFromServerMessage);
+                } else {
+                    resolve(suggestions);
+                }
+            })
+            .catch(reject);
+    });
 };
