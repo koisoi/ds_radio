@@ -1,8 +1,10 @@
 import { noAccessMessage } from "const";
 import { SlashCommandBuilder } from "discord.js";
-import { Execute } from "types";
-import { isPermittedMember } from "utils";
+import { AutocompleteFunction, Execute } from "types";
+import { isPermittedMember, logger } from "utils";
 import { add } from "./add";
+import { globalStore } from "store";
+import { del } from "./delete";
 
 export const data = new SlashCommandBuilder()
     .setName("playlist")
@@ -24,7 +26,32 @@ export const data = new SlashCommandBuilder()
                         "Период времени, в который играет плейлист (формат чч:мм-чч:мм)"
                     )
             )
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("delete")
+            .setDescription("Удалить плейлист")
+            .addStringOption((option) =>
+                option
+                    .setName("name")
+                    .setDescription("Название плейлиста")
+                    .setRequired(true)
+                    .setAutocomplete(true)
+            )
     );
+
+// only playlist names autocomplete needed for all subcommands
+export const autocomplete: AutocompleteFunction = async (interaction) => {
+    const focusedValue = interaction.options.getFocused();
+
+    const choices = globalStore.takenNames;
+    const filtered = choices.filter((choice) =>
+        choice.startsWith(focusedValue)
+    );
+    await interaction.respond(
+        filtered.map((choice) => ({ name: choice, value: choice }))
+    );
+};
 
 export const execute: Execute = async (interaction) => {
     await interaction.deferReply({ flags: "Ephemeral" });
@@ -40,7 +67,7 @@ export const execute: Execute = async (interaction) => {
             return add(interaction);
 
         case "delete":
-            break;
+            return del(interaction);
 
         case "show":
             break;

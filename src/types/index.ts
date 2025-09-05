@@ -1,4 +1,4 @@
-export { Command, Commands, Execute } from "./command";
+export { Command, Commands, Execute, AutocompleteFunction } from "./command";
 export {
     NonScheduledPlaylist,
     ScheduledPlaylist,

@@ -84,6 +84,8 @@ export const addTrack = (track: Track, playlistName: string): Promise<void> => {
     });
 };
 
+//TODO: add deleteTrack
+
 export const changePlaylistName = (
     oldPlaylistname: string,
     newPlaylistName: string

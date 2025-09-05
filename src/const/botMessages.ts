@@ -11,3 +11,6 @@ export const nothingIsPlayingMessage =
 
 export const uniqueNamesOnlyMessage =
     noAccessIcon + "Плейлист с таким названием уже существует!";
+
+export const noSuchPlaylistMessage =
+    noAccessIcon + "Плейлиста с таким названием не существует!";

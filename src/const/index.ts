@@ -4,5 +4,6 @@ export {
     nothingIsPlayingMessage,
     broadcastModeOnlyMessage,
     uniqueNamesOnlyMessage,
+    noSuchPlaylistMessage,
 } from "./botMessages";
 export { wrongFormatFromServerMessage, noDataMessage } from "./systemMessages";

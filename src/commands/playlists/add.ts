@@ -10,7 +10,6 @@ import { Execute, Playlist, stringToTimeRange } from "types";
 import { logger } from "utils";
 
 export const add: Execute = async (interaction) => {
-    // TODO: проверка уникальности имени!
     const playlistName = interaction.options.getString("name", true);
     if (globalStore.takenNames.includes(playlistName)) {
         return interaction.editReply(uniqueNamesOnlyMessage);
@@ -39,7 +38,7 @@ export const add: Execute = async (interaction) => {
                   timeRange: scheduledTimeRange,
               };
 
-    return addPlaylist(newPlaylist)
+    addPlaylist(newPlaylist)
         .then(() => {
             logger.log(
                 `Playlist ${playlistName} was created by ${interaction.user.globalName}`
@@ -50,7 +49,7 @@ export const add: Execute = async (interaction) => {
         })
         .catch((error) => {
             logger.error(
-                `Error creating playlist: ${error}\nPlaylist name: ${playlistName}, scheduled time: ${undefined}`
+                `Error creating playlist: ${error}\nPlaylist name: ${playlistName}, scheduled time: ${scheduledTimeString}`
             );
             return interaction.editReply(
                 errorIcon + `Ошибка при создании плейлиста...`
