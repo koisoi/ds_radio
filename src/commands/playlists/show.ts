@@ -18,7 +18,7 @@ export const show: Execute = async (interaction) => {
                     : `${playlist.tracks
                           .map(
                               (track, i) =>
-                                  `${i}.**${
+                                  `${i + 1}. **${
                                       track.name || "Без названия"
                                   }**: \`${track.ytLink}\``
                           )

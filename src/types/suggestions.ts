@@ -1,14 +1,14 @@
 import { isTrack, Track } from "./player";
 
 export type SuggestedTrack = Track & {
-    authorID: string;
+    authorName: string;
 };
 
 export const isSuggestedTrack = (data: any): data is SuggestedTrack => {
     return (
         isTrack(data) &&
-        "authorID" in data &&
-        typeof data["authorID"] === "string"
+        "authorName" in data &&
+        typeof data["authorName"] === "string"
     );
 };
 

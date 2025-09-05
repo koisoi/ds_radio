@@ -11,6 +11,7 @@ export {
     isPlaylistArray,
     isNonScheduledPlaylistArray,
     isScheduledPlaylistArray,
+    isYoutubeLink,
 } from "./player";
 export {
     SuggestedTrack,

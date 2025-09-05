@@ -1,12 +1,13 @@
 import { noAccessMessage } from "const";
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import { AutocompleteFunction, Execute } from "types";
-import { isPermittedMember, logger } from "utils";
+import { isPermittedMember } from "utils";
 import { add } from "./add";
 import { globalStore } from "store";
 import { del } from "./delete";
 import { show } from "./show";
 import { showall } from "./showall";
+import { addtrack } from "./addtrack";
 
 const existingPlaylistNameOption = (option: SlashCommandStringOption) =>
     option
@@ -52,6 +53,18 @@ export const data = new SlashCommandBuilder()
         subcommand
             .setName("showall")
             .setDescription("Список всех существующих плейлистов")
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("addtrack")
+            .setDescription("Добавить трек в плейлист")
+            .addStringOption((option) =>
+                option
+                    .setName("link")
+                    .setDescription("Ссылка на видео с треком (YouTube)")
+                    .setRequired(true)
+            )
+            .addStringOption(existingPlaylistNameOption)
     );
 
 // only playlist names autocomplete needed for all subcommands
@@ -90,7 +103,7 @@ export const execute: Execute = async (interaction) => {
             return showall(interaction);
 
         case "addtrack":
-            break;
+            return addtrack(interaction);
 
         case "deletetrack":
             break;

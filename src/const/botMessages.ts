@@ -14,3 +14,5 @@ export const uniqueNamesOnlyMessage =
 
 export const noSuchPlaylistMessage =
     noAccessIcon + "Плейлиста с таким названием не существует!";
+
+export const wrongLinkFormatMessage = noAccessIcon + "Неверный формат ссылки!";

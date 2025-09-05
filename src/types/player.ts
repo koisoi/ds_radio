@@ -4,10 +4,10 @@ type YoutubeLink = `${"http://" | "https://" | ""}${"www." | ""}${
     | "youtube.com/watch?v="
     | "youtu.be/"}${string}`;
 
-const isYoutubeLink = (data: any): data is YoutubeLink => {
+export const isYoutubeLink = (data: any): data is YoutubeLink => {
     return (
         typeof data === "string" &&
-        /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=([a-zA-Z0-9_]+)|youtu\.be\/([a-zA-Z\d_]+))(?:&.*)?$/gm.test(
+        /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=([a-zA-Z0-9_]+)|youtu\.be\/([a-zA-Z\d_\-\?\=]+))(?:&.*)?$/gm.test(
             data
         )
     );

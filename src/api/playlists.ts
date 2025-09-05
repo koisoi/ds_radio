@@ -81,15 +81,20 @@ export const deletePlaylist = (playlistName: string): Promise<void> => {
 export const addTrack = (track: Track, playlistName: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         const tracksRef = getPlaylistRef(playlistName).child("tracks");
-        tracksRef.transaction((tracksData) => {
-            const tracks = Object.values(tracksData || {});
-            const newTrackIndex = tracks.length;
-            tracksRef
-                .child(newTrackIndex.toString())
-                .set(track)
-                .then(resolve)
-                .catch(reject);
-        });
+        tracksRef
+            .transaction((tracksData) => {
+                const tracks = Object.values(tracksData || {});
+                tracks.push(track);
+                return tracks;
+            })
+            .then((result) => {
+                if (result.committed) {
+                    resolve();
+                } else {
+                    reject("Error modifying tracks list");
+                }
+            })
+            .catch(reject);
     });
 };
 
