@@ -10,12 +10,12 @@ import { Execute, Playlist, stringToTimeRange } from "types";
 import { logger } from "utils";
 
 export const add: Execute = async (interaction) => {
-    const playlistName = interaction.options.getString("name", true);
+    const playlistName = interaction.options.getString("playlist_name", true);
     if (globalStore.takenNames.includes(playlistName)) {
         return interaction.editReply(uniqueNamesOnlyMessage);
     }
 
-    const scheduledTimeString = interaction.options.getString("time");
+    const scheduledTimeString = interaction.options.getString("time_range");
     const scheduledTimeRange = scheduledTimeString
         ? stringToTimeRange(scheduledTimeString)
         : null;

@@ -5,7 +5,7 @@ import { Execute, isScheduledPlaylist, timeRangeToString } from "types";
 import { logger } from "utils";
 
 export const show: Execute = async (interaction) => {
-    const playlistName = interaction.options.getString("name", true);
+    const playlistName = interaction.options.getString("playlist_name", true);
     if (!globalStore.takenNames.includes(playlistName)) {
         return interaction.editReply(noSuchPlaylistMessage);
     }

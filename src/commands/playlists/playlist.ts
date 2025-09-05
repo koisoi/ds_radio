@@ -6,12 +6,12 @@ import { add } from "./add";
 import { globalStore } from "store";
 import { del } from "./delete";
 import { show } from "./show";
-import { showall } from "./showall";
-import { addtrack } from "./addtrack";
+import { show_all } from "./show_all";
+import { add_track } from "./add_track";
 
 const existingPlaylistNameOption = (option: SlashCommandStringOption) =>
     option
-        .setName("name")
+        .setName("playlist_name")
         .setDescription("Название плейлиста")
         .setRequired(true)
         .setAutocomplete(true);
@@ -25,13 +25,13 @@ export const data = new SlashCommandBuilder()
             .setDescription("Добавить новый плейлист")
             .addStringOption((option) =>
                 option
-                    .setName("name")
+                    .setName("playlist_name")
                     .setDescription("Название плейлиста")
                     .setRequired(true)
             )
             .addStringOption((option) =>
                 option
-                    .setName("time")
+                    .setName("time_range")
                     .setDescription(
                         "Период времени, в который играет плейлист (формат чч:мм-чч:мм)"
                     )
@@ -51,20 +51,29 @@ export const data = new SlashCommandBuilder()
     )
     .addSubcommand((subcommand) =>
         subcommand
-            .setName("showall")
+            .setName("show_all")
             .setDescription("Список всех существующих плейлистов")
     )
     .addSubcommand((subcommand) =>
         subcommand
-            .setName("addtrack")
+            .setName("add_track")
             .setDescription("Добавить трек в плейлист")
+            .addStringOption(existingPlaylistNameOption)
             .addStringOption((option) =>
                 option
                     .setName("link")
                     .setDescription("Ссылка на видео с треком (YouTube)")
                     .setRequired(true)
             )
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("delete_track")
+            .setDescription("Удалить трек из плейлиста")
             .addStringOption(existingPlaylistNameOption)
+            .addNumberOption((option) =>
+                option.setRequired(true).setMinValue(0)
+            )
     );
 
 // only playlist names autocomplete needed for all subcommands
@@ -99,13 +108,13 @@ export const execute: Execute = async (interaction) => {
         case "show":
             return show(interaction);
 
-        case "showall":
-            return showall(interaction);
+        case "show_all":
+            return show_all(interaction);
 
-        case "addtrack":
-            return addtrack(interaction);
+        case "add_track":
+            return add_track(interaction);
 
-        case "deletetrack":
+        case "delete_track":
             break;
 
         case "schedule":

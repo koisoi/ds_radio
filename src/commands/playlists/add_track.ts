@@ -9,8 +9,8 @@ import { globalStore } from "store";
 import { Execute, isYoutubeLink, Track } from "types";
 import { logger } from "utils";
 
-export const addtrack: Execute = async (interaction) => {
-    const playlistName = interaction.options.getString("name", true);
+export const add_track: Execute = async (interaction) => {
+    const playlistName = interaction.options.getString("playlist_name", true);
     if (!globalStore.takenNames.includes(playlistName)) {
         return interaction.editReply(noSuchPlaylistMessage);
     }
