@@ -82,7 +82,7 @@ export const addTrack = (track: Track, playlistName: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         const tracksRef = getPlaylistRef(playlistName).child("tracks");
         tracksRef.transaction((tracksData) => {
-            const tracks = Object.values(tracksData);
+            const tracks = Object.values(tracksData || {});
             const newTrackIndex = tracks.length;
             tracksRef
                 .child(newTrackIndex.toString())
@@ -93,7 +93,30 @@ export const addTrack = (track: Track, playlistName: string): Promise<void> => {
     });
 };
 
-//TODO: add deleteTrack
+export const deleteTrack = (
+    trackIndex: number,
+    playlistName: string
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        const tracksRef = getPlaylistRef(playlistName).child("tracks");
+        tracksRef
+            .get()
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    reject(noDataMessage);
+                }
+
+                const tracks = Object.keys(snapshot.val());
+                if (tracks[trackIndex] === undefined) {
+                    reject(noDataMessage);
+                }
+
+                const trackRef = tracksRef.child(tracks[trackIndex]);
+                trackRef.remove().then(resolve).catch(reject);
+            })
+            .catch(reject);
+    });
+};
 
 export const changePlaylistName = (
     oldPlaylistname: string,
