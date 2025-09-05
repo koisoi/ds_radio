@@ -6,6 +6,7 @@ import { add } from "./add";
 import { globalStore } from "store";
 import { del } from "./delete";
 import { show } from "./show";
+import { showall } from "./showall";
 
 const existingPlaylistNameOption = (option: SlashCommandStringOption) =>
     option
@@ -46,6 +47,11 @@ export const data = new SlashCommandBuilder()
             .setName("show")
             .setDescription("Показать плейлист")
             .addStringOption(existingPlaylistNameOption)
+    )
+    .addSubcommand((subcommand) =>
+        subcommand
+            .setName("showall")
+            .setDescription("Список всех существующих плейлистов")
     );
 
 // only playlist names autocomplete needed for all subcommands
@@ -81,7 +87,7 @@ export const execute: Execute = async (interaction) => {
             return show(interaction);
 
         case "showall":
-            break;
+            return showall(interaction);
 
         case "addtrack":
             break;

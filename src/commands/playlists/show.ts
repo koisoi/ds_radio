@@ -15,12 +15,14 @@ export const show: Execute = async (interaction) => {
             const printedTracks =
                 playlist.tracks.length === 0
                     ? `Нет добавленных треков!`
-                    : `${playlist.tracks.map(
-                          (track) =>
-                              `**${track.name || "Без названия"}**: \`${
-                                  track.ytLink
-                              }\``
-                      )}`;
+                    : `${playlist.tracks
+                          .map(
+                              (track, i) =>
+                                  `${i}.**${
+                                      track.name || "Без названия"
+                                  }**: \`${track.ytLink}\``
+                          )
+                          .join("\n")}`;
             let scheduled = false;
             let timeRangeString = "";
 
