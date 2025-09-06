@@ -33,7 +33,7 @@ export const show: Execute = async (interaction) => {
 
             interaction.editReply(
                 `### ${playlist.name}\n${
-                    scheduled ? `Время эфира: ${timeRangeString}\n` : ""
+                    scheduled ? `Время эфира: ${timeRangeString}` : ""
                 }\n${printedTracks}`
             );
         })

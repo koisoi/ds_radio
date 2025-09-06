@@ -7,6 +7,8 @@ export {
     schedulePlaylist,
     unschedulePlaylist,
     subscribeToTakenNames,
+    addTrack,
+    deleteTrack,
 } from "./playlists";
 export {
     addSuggestion,

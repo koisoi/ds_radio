@@ -9,6 +9,7 @@ import { globalStore } from "store";
 import { Execute } from "types";
 import { isPermittedMember, logger } from "utils";
 
+// TODO: добавление плейлиста в очередь
 export const data = new SlashCommandBuilder()
     .setName("play")
     .setDescription("Добавить трек в очередь")

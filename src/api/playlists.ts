@@ -9,6 +9,7 @@ import {
     isPlaylistArray,
     isScheduledPlaylistArray,
     isNonScheduledPlaylistArray,
+    isTrack,
 } from "types";
 import { getDatabase, Reference } from "firebase-admin/database";
 import { noDataMessage, wrongFormatFromServerMessage } from "const";
@@ -19,6 +20,16 @@ const getPlaylistRef = (name: string): Reference =>
 
 const getTakenNamesRef = (): Reference =>
     getDatabase().ref(`takenNames/${globalStore.guildID}`);
+
+const transformServerValue = (serverValue: any): any => {
+    const transformedValue = serverValue;
+    if (!("tracks" in transformedValue)) {
+        transformedValue.tracks = [];
+    } else {
+        transformedValue.tracks = Object.values(transformedValue.tracks);
+    }
+    return transformedValue;
+};
 
 export const addPlaylist = (playlist: Playlist): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -45,11 +56,7 @@ export const getPlaylist = (playlistName: string): Promise<Playlist> => {
                     reject(noDataMessage);
                 }
 
-                const playlist = snapshot.val();
-                // thanks google for your bombastic optimization and straight up ignoring empty arrays
-                if (!playlist.tracks) {
-                    playlist.tracks = [];
-                }
+                const playlist = transformServerValue(snapshot.val());
 
                 if (!isPlaylist(playlist)) {
                     logger.debug(playlist);
@@ -81,27 +88,15 @@ export const deletePlaylist = (playlistName: string): Promise<void> => {
 export const addTrack = (track: Track, playlistName: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         const tracksRef = getPlaylistRef(playlistName).child("tracks");
-        tracksRef
-            .transaction((tracksData) => {
-                const tracks = Object.values(tracksData || {});
-                tracks.push(track);
-                return tracks;
-            })
-            .then((result) => {
-                if (result.committed) {
-                    resolve();
-                } else {
-                    reject("Error modifying tracks list");
-                }
-            })
-            .catch(reject);
+        const newTrackRef = tracksRef.push();
+        newTrackRef.set(track).then(resolve).catch(reject);
     });
 };
 
 export const deleteTrack = (
     trackIndex: number,
     playlistName: string
-): Promise<void> => {
+): Promise<Track | null> => {
     return new Promise((resolve, reject) => {
         const tracksRef = getPlaylistRef(playlistName).child("tracks");
         tracksRef
@@ -111,24 +106,54 @@ export const deleteTrack = (
                     reject(noDataMessage);
                 }
 
-                const tracks = Object.keys(snapshot.val());
-                if (tracks[trackIndex] === undefined) {
+                const trackKeys = Object.keys(snapshot.val());
+                if (trackKeys[trackIndex] === undefined) {
                     reject(noDataMessage);
                 }
 
-                const trackRef = tracksRef.child(tracks[trackIndex]);
-                trackRef.remove().then(resolve).catch(reject);
+                const trackRef = tracksRef.child(trackKeys[trackIndex]);
+                trackRef
+                    .remove()
+                    .then(() => {
+                        const track = Object.values(snapshot.val())[trackIndex];
+                        if (!isTrack(track)) {
+                            resolve(null);
+                        } else {
+                            resolve(track);
+                        }
+                    })
+                    .catch(reject);
+            })
+            .catch(reject);
+    });
+};
+
+export const copyPlaylist = (
+    copyFromName: string,
+    copyToName: string
+): Promise<void> => {
+    return new Promise((resolve, reject) => {
+        const fromRef = getPlaylistRef(copyFromName);
+        fromRef
+            .get()
+            .then((snapshot) => {
+                if (!snapshot.exists()) {
+                    reject(noDataMessage);
+                }
+
+                const toRef = getPlaylistRef(copyToName);
+                toRef.set(snapshot.val()).then(resolve).catch(reject);
             })
             .catch(reject);
     });
 };
 
 export const changePlaylistName = (
-    oldPlaylistname: string,
+    oldPlaylistName: string,
     newPlaylistName: string
 ): Promise<void> => {
     return new Promise((resolve, reject) => {
-        const playlistRef = getPlaylistRef(oldPlaylistname);
+        const playlistRef = getPlaylistRef(oldPlaylistName);
         playlistRef
             .get()
             .then((snapshot) => {
@@ -147,7 +172,7 @@ export const changePlaylistName = (
                                     .remove()
                                     .then(() => {
                                         getTakenNamesRef()
-                                            .child(oldPlaylistname)
+                                            .child(oldPlaylistName)
                                             .remove()
                                             .then(resolve)
                                             .catch(reject);
@@ -216,7 +241,9 @@ export const getAllPlaylists = (
                     resolve([]);
                 }
 
-                const playlists = Object.values(snapshot.val());
+                const playlists = Object.values(snapshot.val()).map((el) =>
+                    transformServerValue(el)
+                );
 
                 if (options !== undefined) {
                     if (options.scheduled) {

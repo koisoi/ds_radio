@@ -8,6 +8,7 @@ import { del } from "./delete";
 import { show } from "./show";
 import { show_all } from "./show_all";
 import { add_track } from "./add_track";
+import { delete_track } from "./delete_track";
 
 const existingPlaylistNameOption = (option: SlashCommandStringOption) =>
     option
@@ -72,7 +73,11 @@ export const data = new SlashCommandBuilder()
             .setDescription("Удалить трек из плейлиста")
             .addStringOption(existingPlaylistNameOption)
             .addNumberOption((option) =>
-                option.setRequired(true).setMinValue(0)
+                option
+                    .setName("track_number")
+                    .setDescription("Номер трека")
+                    .setRequired(true)
+                    .setMinValue(1)
             )
     );
 
@@ -115,12 +120,18 @@ export const execute: Execute = async (interaction) => {
             return add_track(interaction);
 
         case "delete_track":
-            break;
+            return delete_track(interaction);
 
         case "schedule":
             break;
 
         case "unschedule":
+            break;
+
+        case "change_name":
+            break;
+
+        case "copy":
             break;
 
         default:

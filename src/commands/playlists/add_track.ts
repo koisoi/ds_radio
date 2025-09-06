@@ -1,4 +1,4 @@
-import { addTrack } from "api/playlists";
+import { addTrack } from "api";
 import {
     errorIcon,
     noSuchPlaylistMessage,
